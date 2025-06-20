@@ -1,5 +1,5 @@
 # DevOps Course
-# 🚀 12-Week DevOps Program: From Beginner to professional
+# 12-Week DevOps Program: From Beginner to professional
 
 ## Course Objective:
 By the end of this course, learners will be able to:
