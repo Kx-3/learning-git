@@ -34,7 +34,7 @@ A **day-by-day DevOps course** combining theory, hands-on labs, and weekly proje
 
 ---
 
-## 📋 Overview
+## Overview
 - **Duration:** 12 weeks (4 days of learning + 1 project day per week).  
 - **Tools:** Azure, Docker, Kubernetes (AKS), Terraform, ArgoCD, Bash, Git, Azure Pipelines, Prometheus.  
 - **Target Role:** DevOps Engineer.  
