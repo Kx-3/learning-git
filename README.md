@@ -1,5 +1,5 @@
 # Learning Git
-Learning git commands
+Learning git and linux commands.
 
 ## Linux Commands
 
