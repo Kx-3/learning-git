@@ -4,7 +4,7 @@
 ## Course Objective:
 By the end of this course, learners will be able to:
 
-**✅** Understand the DevOps lifecycle and its benefits.  
+Understand the DevOps lifecycle and its benefits.  
 **✅** Use Git and the command line for version control and collaboration.  
 **✅** Set up and use build tools like Maven and Gradle for software compilation and packaging.  
 **✅** Implement Continuous Integration and Continuous Deployment (CI/CD) pipelines using Jenkins.  
