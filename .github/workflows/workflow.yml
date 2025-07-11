@@ -77,7 +77,7 @@ jobs:
           JSON_PAYLOAD=$(cat "$TMP_JSON")
           rm "$TMP_JSON"
           echo "Generated JSON Payload for DB Sync: $JSON_PAYLOAD"
-          echo "files_to_sync=$JSON_PAYLOAD" >> "$GITHUB_OUTPUT"
+          echo "files_to_sync=$(echo "$JSON_PAYLOAD" | jq -c '.')" >> "$GITHUB_OUTPUT"
 
       - name: Call FastAPI Backend to Sync Database
         # Only run if there are files to sync and R2 upload succeeded
