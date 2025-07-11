@@ -33,10 +33,6 @@ jobs:
       - name: Get list of changed Markdown files for Database Update
         id: get_changed_md_files
         run: |
-          # Get files that were added or modified in this push within the 'lessons/' directory
-          # We only care about A (added) and M (modified) for *uploading* and *syncing*.
-          # Deletions are handled implicitly by the backend NOT having the record anymore
-          # or if you implement a separate deletion logic in the backend triggered by 'D' files.
           CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }} | grep -E '^(A|M)\slessons/.*\.md$' || true)
 
           if [ -z "$CHANGED_FILES" ]; then
