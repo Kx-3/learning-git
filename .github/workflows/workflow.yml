@@ -45,6 +45,8 @@ jobs:
           fi
 
           JSON_PAYLOAD="[]"
+          TMP_JSON=$(mktemp)
+          echo '[]' > "$TMP_JSON"
           R2_BASE_URL="${{ secrets.R2_PUBLIC_BASE_URL }}"
           R2_BUCKET="${{ secrets.R2_BUCKET }}"
 
@@ -69,9 +71,11 @@ jobs:
               --arg url "$R2_PUBLIC_URL" \
               '{r2_object_key: $key, r2_public_url: $url}'
             )
-            JSON_PAYLOAD=$(echo "$JSON_PAYLOAD" | jq --argjson new_file_json "$FILE_JSON" '. + [$new_file_json]')
+            jq --argjson new_file_json "$FILE_JSON" '. + [$new_file_json]' "$TMP_JSON" > "$TMP_JSON.tmp" && mv "$TMP_JSON.tmp" "$TMP_JSON"
           done
-
+          echo $TMP_JSON
+          JSON_PAYLOAD=$(cat "$TMP_JSON")
+          rm "$TMP_JSON"
           echo "Generated JSON Payload for DB Sync: $JSON_PAYLOAD"
           echo "files_to_sync=$JSON_PAYLOAD" >> "$GITHUB_OUTPUT"
 
