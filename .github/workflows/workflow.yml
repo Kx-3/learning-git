@@ -1,25 +1,90 @@
-name: Upload markdown to Cloudflare R2
+name: Sync Markdown Lessons to Cloudflare R2 & Database
 
 on:
   push:
-    paths:
-      - 'lessons/**/*.md'
     branches:
-      - main
+      - main # Or your main content branch
+    paths:
+      - 'lessons/**/*.md' # Trigger only for markdown files within the 'lessons/' directory
 
 jobs:
-  upload:
+  upload_and_sync:
     runs-on: ubuntu-latest
+    environment: production # Use an environment if you have one for secrets
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # IMPORTANT: Needed to compare current commit with previous for changed files
 
-      - name: Upload files to Cloudflare R2
-        uses: ryand56/r2-upload-action@latest
-        with: 
+      - name: Upload ALL lessons from 'lessons/' directory to Cloudflare R2
+        id: r2_upload
+        uses: ryand56/r2-upload-action@latest # Pin to a specific version for stability
+        with:
           r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
           r2-access-key-id: ${{ secrets.R2_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY}}
+          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.R2_BUCKET }}
-          source-dir: './lessons'
+          source-dir: './lessons' # This copies the entire lessons/ directory structure
+          # e.g., 'lessons/course-intro-to-programming/html-basics/2.4-html-forms.md'
+          # will be uploaded as 'course-intro-to-programming/html-basics/2.4-html-forms.md' in R2.
+
+      - name: Get list of changed Markdown files for Database Update
+        id: get_changed_md_files
+        run: |
+          # Get files that were added or modified in this push within the 'lessons/' directory
+          # We only care about A (added) and M (modified) for *uploading* and *syncing*.
+          # Deletions are handled implicitly by the backend NOT having the record anymore
+          # or if you implement a separate deletion logic in the backend triggered by 'D' files.
+          CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }} | grep -E '^(A|M)\slessons/.*\.md$' || true)
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No relevant markdown files added or modified. Skipping database sync."
+            echo "files_to_sync=[]" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          JSON_PAYLOAD="[]"
+          R2_BASE_URL="${{ secrets.R2_PUBLIC_BASE_URL }}"
+          R2_BUCKET="${{ secrets.R2_BUCKET }}"
+
+          echo "$CHANGED_FILES" | while IFS= read -r line; do
+            FULL_FILE_PATH=$(echo "$line" | awk '{print $2}') # e.g., 'lessons/course-slug/topic-slug/lesson-slug.md'
+
+            # R2 object key: remove 'lessons/' prefix
+            R2_OBJECT_KEY=$(echo "${FULL_FILE_PATH}" | sed 's|^lessons/||')
+
+            # Construct the full public URL
+            R2_PUBLIC_URL=""
+            if [[ "${R2_BASE_URL}" == *".r2.dev"* ]]; then
+              # Default R2 public endpoint format: BASE_URL/BUCKET_NAME/OBJECT_KEY
+              R2_PUBLIC_URL="${R2_BASE_URL}/${R2_BUCKET}/${R2_OBJECT_KEY}"
+            else
+              # Custom domain mapped to bucket root format: BASE_URL/OBJECT_KEY
+              R2_PUBLIC_URL="${R2_BASE_URL}/${R2_OBJECT_KEY}"
+            fi
+
+            FILE_JSON=$(jq -n \
+              --arg key "$R2_OBJECT_KEY" \
+              --arg url "$R2_PUBLIC_URL" \
+              '{r2_object_key: $key, r2_public_url: $url}'
+            )
+            JSON_PAYLOAD=$(echo "$JSON_PAYLOAD" | jq --argjson new_file_json "$FILE_JSON" '. + [$new_file_json]')
+          done
+
+          echo "Generated JSON Payload for DB Sync: $JSON_PAYLOAD"
+          echo "files_to_sync=$JSON_PAYLOAD" >> "$GITHUB_OUTPUT"
+
+      - name: Call FastAPI Backend to Sync Database
+        # Only run if there are files to sync and R2 upload succeeded
+        if: success() && steps.get_changed_md_files.outputs.files_to_sync != '[]'
+        run: |
+          curl -X POST "${{ secrets.DATABASE_SYNC_API_ENDPOINT }}" \
+               -H "Content-Type: application/json" \
+               -H "Authorization: Bearer ${{ secrets.DATABASE_SYNC_API_TOKEN }}" \
+               -d '${{ steps.get_changed_md_files.outputs.files_to_sync }}' \
+               --fail-with-body
+        env:
+          DATABASE_SYNC_API_ENDPOINT: ${{ secrets.DATABASE_SYNC_API_ENDPOINT }}
+          DATABASE_SYNC_API_TOKEN: ${{ secrets.DATABASE_SYNC_API_TOKEN }}
