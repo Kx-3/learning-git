@@ -33,7 +33,7 @@ jobs:
       - name: Get list of changed Markdown files for Database Update
         id: get_changed_md_files
         run: |
-          CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }} | grep -E '^(A|M)\slessons/.*\.md$' || true)
+          CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }})
 
           if [ -z "$CHANGED_FILES" ]; then
             echo "No relevant markdown files added or modified. Skipping database sync."
