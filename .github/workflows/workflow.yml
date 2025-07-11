@@ -30,6 +30,9 @@ jobs:
           # e.g., 'lessons/course-intro-to-programming/html-basics/2.4-html-forms.md'
           # will be uploaded as 'course-intro-to-programming/html-basics/2.4-html-forms.md' in R2.
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq    
+        
       - name: Get list of changed Markdown files for Database Update
         id: get_changed_md_files
         run: |
