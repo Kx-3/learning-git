@@ -1,5 +1,6 @@
 # Lesson: Introduction to Linux and Bash Scripting
 
+
 ## 1. Introduction to Linux
 ### 1.1 Brief History of Linux
 - Linux is an open-source operating system that is based on the Unix operating system. It was created by Linus Torvalds in 1991.
