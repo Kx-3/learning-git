@@ -29,14 +29,11 @@ jobs:
           source-dir: './lessons' # This copies the entire lessons/ directory structure
           # e.g., 'lessons/course-intro-to-programming/html-basics/2.4-html-forms.md'
           # will be uploaded as 'course-intro-to-programming/html-basics/2.4-html-forms.md' in R2.
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq    
         
       - name: Get list of changed Markdown files for Database Update
         id: get_changed_md_files
         run: |
-          CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }})
+          CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }} | grep -E '^(A|M)\slessons/.*\.md$')
 
           if [ -z "$CHANGED_FILES" ]; then
             echo "No relevant markdown files added or modified. Skipping database sync."
