@@ -5,7 +5,6 @@
 DevOps is a set of practices that aim to automate and integrate the processes between software development (Dev) and IT operations (Ops). By promoting a culture of collaboration, communication, and integration, DevOps shortens the system development life cycle and delivers high-quality software faster.
 
 ### Key Principles of DevOps
-
 #### Automation
 
 Automating repetitive tasks such as testing, building, and deployment. This allows teams to focus on more important tasks. Tools like Jenkins, GitLab CI, and CircleCI are widely used to automate these tasks.
