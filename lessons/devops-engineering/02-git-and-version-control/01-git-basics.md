@@ -305,3 +305,5 @@ These commands form the basis of your daily interaction with Git.
 *   Clone the repository to a *different* directory on your computer to simulate another user cloning it.
 *   Make changes in the cloned repository and push them.
 *   Go back to your original repository and pull the changes.
+
+edit

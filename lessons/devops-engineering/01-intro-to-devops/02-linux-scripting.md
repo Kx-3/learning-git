@@ -209,3 +209,5 @@ greet "Alice"
 - Write a simple Bash script to automate a task (e.g., creating a backup of a directory).
 - Experiment with loops and conditional statements in Bash.
 - Create a script to process text files or schedule a task using cron.
+
+edit
