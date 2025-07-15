@@ -1,5 +1,4 @@
 # Lesson 2: Branching Strategies
-
 ## Introduction
 
 Branching is one of the most powerful features of Git. It allows you to diverge from the main line of development and work on new features, bug fixes, or experiments in isolation without affecting the stability of the main codebase. In a collaborative environment, effective branching is crucial for managing parallel development and integrating changes safely.

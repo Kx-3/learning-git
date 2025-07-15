@@ -1,5 +1,4 @@
 # Lesson 1: Git Basics
-
 ## Introduction
 
 Welcome to Week 2! This week, we dive into the world of **Git** and **Version Control**. Git is an essential tool for any software developer or DevOps engineer, allowing you to track changes to your code, collaborate with others, and manage different versions of your projects effectively.
