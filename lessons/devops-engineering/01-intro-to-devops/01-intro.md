@@ -1,4 +1,5 @@
 # DevOps Fundamentals
+
 ## Overview of DevOps Principles and Practices
 
 DevOps is a set of practices that aim to automate and integrate the processes between software development (Dev) and IT operations (Ops). By promoting a culture of collaboration, communication, and integration, DevOps shortens the system development life cycle and delivers high-quality software faster.

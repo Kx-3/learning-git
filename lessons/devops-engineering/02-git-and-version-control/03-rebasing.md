@@ -1,4 +1,5 @@
 # Lesson 3: Advanced Git: Rebasing, Merging and Resolving conflicts
+
 ## Introduction
 
 In the previous lesson, we explored the fundamentals of branching and merging. Merging is a primary way to integrate changes from one branch into another. However, Git offers another powerful technique for integrating changes: **rebasing**. While both achieve the goal of combining work, they do so differently and result in different commit histories. Understanding when and how to use rebasing, along with advanced conflict resolution and other useful Git commands, is crucial for maintaining a clean and understandable project history.
