@@ -252,5 +252,3 @@ Mastering branching and merging is key to unlocking Git's collaborative potentia
 *   Practice deleting branches after merging.
 *   Try visualizing the history using `git log --oneline --graph --all` after creating and merging branches.
 *   Simulate the GitHub Flow: Create a `main` branch, branch off a `feature/test` branch, make commits, and merge it back into `main`.
-
-edit

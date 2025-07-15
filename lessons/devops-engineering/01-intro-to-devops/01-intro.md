@@ -232,5 +232,3 @@ CALMS is a framework in DevOps that is used to access and measure the company’
 3. **Lean:**
 4. **Measurement:**
 5. **Sharing:**
-
-edit
