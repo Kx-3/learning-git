@@ -303,5 +303,3 @@ Understanding these advanced tools gives you more control over your project's hi
 *   Make some changes, stage some, leave some unstaged, then use `git stash`. Practice applying and popping stashes.
 *   Create a lightweight tag and an annotated tag.
 *   View the history (`git log --oneline --graph --all`) and identify the commits pointed to by your branches and tags.
-
-edit
